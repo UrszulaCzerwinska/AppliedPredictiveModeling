@@ -32,7 +32,12 @@
 
 library(AppliedPredictiveModeling)
 data(FuelEconomy)
+dim(cars2010)
+dim(cars2011)
+dim(cars2012)
 
+head(cars2010)
+summary(cars2010)
 ## Format data for plotting against engine displacement
 
 ## Sort by engine displacement
@@ -51,9 +56,13 @@ library(lattice)
 xyplot(FE ~ EngDispl|Year, plotData,
        xlab = "Engine Displacement",
        ylab = "Fuel Efficiency (MPG)",
-       between = list(x = 1.2))
+       between = list(x = 1.2),
+       type=c("p","r"))
+
 
 ## Fit a single linear model and conduct 10-fold CV to estimate the error
+#install.packages("caret")
+#install.packages("earth")
 library(caret)
 set.seed(1)
 lm1Fit <- train(FE ~ EngDispl, 
@@ -61,6 +70,16 @@ lm1Fit <- train(FE ~ EngDispl,
                 method = "lm", 
                 trControl = trainControl(method= "cv"))
 lm1Fit
+str(lm1Fit)
+plot(lm1Fit$residuals)
+summary(lm1Fit)
+
+#plot regression line
+xyplot(FE + fitted(lm1Fit) ~ EngDispl, plotData,
+       type = c("p", "l"), distribute.type = TRUE)
+
+fit1 = summary(aov(FE ~ EngDispl, data = cars2010))
+plot(aov(FE ~ EngDispl, data = cars2010))
 
 
 ## Fit a quadratic model too
@@ -75,6 +94,11 @@ lm2Fit <- train(FE ~ EngDispl + ED2,
                 method = "lm", 
                 trControl = trainControl(method= "cv"))
 lm2Fit
+summary(lm2Fit)
+
+#plot regression line
+xyplot(FE + fitted(lm2Fit) ~ EngDispl, plotData,
+       type = c("p", "l"), distribute.type = TRUE)
 
 ## Finally a MARS model (via the earth package)
 
@@ -89,10 +113,24 @@ marsFit
 
 plot(marsFit)
 
+#plot regression line
+xyplot(FE + fitted(marsFit) ~ EngDispl, plotData,
+       type = c("p", "l"), distribute.type = TRUE)
+
 ## Predict the test set data
 cars2011$lm1  <- predict(lm1Fit,  cars2011)
+
 cars2011$lm2  <- predict(lm2Fit,  cars2011)
 cars2011$mars <- predict(marsFit, cars2011)
+colnames(cars2011)
+head(cars2011)
+plot(cars2011$lm1,cars2011$FE,pch=16)
+plot(cars2011$lm2,cars2011$FE,pch=16)
+plot(cars2011$mars,cars2011$FE,pch=16)
+
+cor.test(cars2011$lm1,cars2011$FE)
+cor.test(cars2011$lm2,cars2011$FE)
+cor.test(cars2011$mars,cars2011$FE)
 
 ## Get test set performance values via caret's postResample function
 

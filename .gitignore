@@ -5,3 +5,4 @@
 *.Rproj
 *.RDataTmp
 *.DS_Store
+.Rproj.user
