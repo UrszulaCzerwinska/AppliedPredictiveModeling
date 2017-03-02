@@ -33,6 +33,9 @@
 library(caret)
 data(GermanCredit)
 
+head(GermanCredit)
+summary(GermanCredit)
+
 ## First, remove near-zero variance predictors then get rid of a few predictors 
 ## that duplicate values. For example, there are two possible values for the 
 ## housing variable: "Rent", "Own" and "ForFree". So that we don't have linear
@@ -60,6 +63,7 @@ GermanCreditTest  <- GermanCredit[-inTrain, ]
 ## presentable range and to re-use later with different resampling
 ## methods.
 
+#install.packages("kernlab")
 library(kernlab)
 set.seed(231)
 sigDist <- sigest(Class ~ ., data = GermanCreditTrain, frac = 1)
@@ -73,9 +77,9 @@ svmTuneGrid <- data.frame(sigma = as.vector(sigDist)[1], C = 2^(-2:7))
 ### process. It can very quickly overwhelm the available hardware. We
 ### estimate the memory usage (VSIZE = total memory size) to be 
 ### 2566M/core.
-
+#install.packages("doMC")
 library(doMC)
-registerDoMC(4)
+registerDoMC(cores = 1)
 
 set.seed(1056)
 svmFit <- train(Class ~ .,

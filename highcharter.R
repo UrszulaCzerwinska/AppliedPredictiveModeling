@@ -1,0 +1,10 @@
+install.packages("highcharter")
+library(highcharter)
+data("mpg", package = "ggplot2")
+head(mpg)
+hchart(mpg, "point", hcaes(x = displ, y = cty))
+
+data(diamonds, economics_long, mpg, package = "ggplot2")
+library(dplyr)
+head(mpg)
+hchart(mpg, "scatter", hcaes(x = displ, y = hwy, group = class))

@@ -30,10 +30,12 @@
 
 ################################################################################
 ### Section 3.1 Case Study: Cell Segmentation in High-Content Screening
+#install.packages("corrplot")
+#install.packages("e1071")
 
 library(AppliedPredictiveModeling)
 data(segmentationOriginal)
-
+head(segmentationOriginal)
 ## Retain the original training set
 segTrain <- subset(segmentationOriginal, Case == "Train")
 
@@ -51,7 +53,7 @@ max(segTrainX$VarIntenCh3)/min(segTrainX$VarIntenCh3)
 
 library(e1071)
 skewness(segTrainX$VarIntenCh3)
-
+hist(segTrainX$VarIntenCh3)
 library(caret)
 
 ## Use caret's preProcess function to transform for skewness
@@ -62,11 +64,12 @@ segTrainTrans <- predict(segPP, segTrainX)
 
 ## Results for a single predictor
 segPP$bc$VarIntenCh3
-
+skewness(segTrainTrans$VarIntenCh3)
 histogram(~segTrainX$VarIntenCh3,
           xlab = "Natural Units",
           type = "count")
 
+hist(segTrainTrans$VarIntenCh3)
 histogram(~log(segTrainX$VarIntenCh3),
           xlab = "Log Units",
           ylab = " ",
@@ -91,7 +94,7 @@ pr <- prcomp(~ AvgIntenCh1 + EntropyIntenCh1,
              data = segTrainTrans, 
              scale. = TRUE)
 
-transparentTheme(pchSize = .7, trans = .3)
+transparentTheme(pchSize = .7, trans = .3) ###nice
 
 xyplot(AvgIntenCh1 ~ EntropyIntenCh1,
        data = segTrainTrans,
@@ -119,7 +122,7 @@ xyplot(PC2 ~ PC1,
 
 ## There are a few predictors with only a single value, so we remove these first
 ## (since PCA uses variances, which would be zero)
-
+head(segTrainX)
 isZV <- apply(segTrainX, 2, function(x) length(unique(x)) == 1)
 segTrainX <- segTrainX[, !isZV]
 
@@ -158,6 +161,7 @@ segRot$Channel <- factor(as.character(segRot$Channel))
 
 transparentTheme(pchSize = .8, trans = .7)
 panelRange <- extendrange(segRot[, 1:3])
+install.packages("ellipse")
 library(ellipse)
 upperp <- function(...)
   {
