@@ -42,7 +42,7 @@ glassTestPP <- predict(PPt, glassTest)
 #compare skeweness
 apply(glassTrainPP[1:9],2,function(x) {skewness(x)}) #skewnees in the range 0.4 to 6 in abs units
 #here is change 
-Glass[1:2,-10, 33333]
+Glass[1:2,-10]
 
 #### try to transform into log
 Glass2 <-data.frame(log1p(Glass[,-10]), Type= Glass[,10])
