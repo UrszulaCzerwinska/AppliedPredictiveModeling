@@ -41,8 +41,8 @@ PPt <- preProcess(glassTest, method = "BoxCox")
 glassTestPP <- predict(PPt, glassTest)
 #compare skeweness
 apply(glassTrainPP[1:9],2,function(x) {skewness(x)}) #skewnees in the range 0.4 to 6 in abs units
-
-Glass[1:2,-10]
+#here is change 
+Glass[1:2,-10, 33333]
 
 #### try to transform into log
 Glass2 <-data.frame(log1p(Glass[,-10]), Type= Glass[,10])
@@ -53,7 +53,7 @@ splom(Glass2,
       between = list(x = 1.2),
       type=c("p"))
 ###looks better
-apply(Glass2[1:9],2,function(x) {skewness(x)}, rowname=FALSE) #skewnees is lower
+apply(Glass2[1:9],2,function(x) {skewness(x)}) #skewnees is lower
 
 ####split into test and train
 
