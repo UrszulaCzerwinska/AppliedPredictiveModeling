@@ -53,7 +53,7 @@ splom(Glass2,
       between = list(x = 1.2),
       type=c("p"))
 ###looks better
-apply(Glass2[1:9],2,function(x) {skewness(x)}) #skewnees is lower
+apply(Glass2[1:9],2,function(x) {skewness(x)}, rowname=FALSE) #skewnees is lower
 
 ####split into test and train
 
